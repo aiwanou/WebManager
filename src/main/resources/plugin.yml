@@ -1,0 +1,18 @@
+name: WebManager
+main: com.webmanager.WebManager
+version: 1.1beta
+api-version: 1.21
+authors: [YourName]
+description: 使用网页管理MC服务器的插件
+website: https://example.com
+
+commands:
+  webmanager:
+    description: WebManager插件的主命令
+    usage: /webmanager <add|remove|list|reload>
+    permission: webmanager.admin
+
+permissions:
+  webmanager.admin:
+    description: 允许使用WebManager的所有功能
+    default: op

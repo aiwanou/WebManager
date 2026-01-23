@@ -1,0 +1,46 @@
+# Maven
+/target/
+/.mvn/
+
+# IDE
+/.idea/
+/*.iml
+/*.ipr
+/*.iws
+/.vscode/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Build files
+*.class
+*.jar
+*.war
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Testing
+/test-results/
+/coverage/
+
+# Editor directories and files
+/.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
