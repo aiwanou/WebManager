@@ -7,9 +7,11 @@ import java.util.concurrent.TimeUnit;
 public class IpAuthorizationManager {
 
     private final Map<String, Long> authorizedIps;
+    private final AuthConfigManager authConfigManager;
 
-    public IpAuthorizationManager() {
-        this.authorizedIps = new HashMap<>();
+    public IpAuthorizationManager(WebManager plugin) {
+        this.authConfigManager = new AuthConfigManager(plugin);
+        this.authorizedIps = authConfigManager.loadAuthConfig();
     }
 
     /**
@@ -20,6 +22,7 @@ public class IpAuthorizationManager {
     public void addAuthorizedIp(String ip, int days) {
         long expirationTime = System.currentTimeMillis() + TimeUnit.DAYS.toMillis(days);
         authorizedIps.put(ip, expirationTime);
+        saveConfig();
     }
 
     /**
@@ -28,6 +31,7 @@ public class IpAuthorizationManager {
      */
     public void removeAuthorizedIp(String ip) {
         authorizedIps.remove(ip);
+        saveConfig();
     }
 
     /**
@@ -44,6 +48,7 @@ public class IpAuthorizationManager {
         if (System.currentTimeMillis() > expirationTime) {
             // 授权已过期，移除
             authorizedIps.remove(ip);
+            saveConfig();
             return false;
         }
 
@@ -63,6 +68,16 @@ public class IpAuthorizationManager {
      */
     public void cleanupExpired() {
         long currentTime = System.currentTimeMillis();
-        authorizedIps.entrySet().removeIf(entry -> entry.getValue() < currentTime);
+        boolean changed = authorizedIps.entrySet().removeIf(entry -> entry.getValue() < currentTime);
+        if (changed) {
+            saveConfig();
+        }
+    }
+
+    /**
+     * 保存配置到文件
+     */
+    private void saveConfig() {
+        authConfigManager.saveAuthConfig(authorizedIps);
     }
 }

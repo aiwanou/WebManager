@@ -10,6 +10,7 @@ public class WebManager extends JavaPlugin {
     private ResourceMonitor resourceMonitor;
     private LogListener logListener;
     private IpAuthorizationManager ipAuthManager;
+    private OperationLogger operationLogger;
 
     @Override
     public void onEnable() {
@@ -18,7 +19,8 @@ public class WebManager extends JavaPlugin {
         // 初始化组件
         resourceMonitor = new ResourceMonitor();
         logListener = new LogListener();
-        ipAuthManager = new IpAuthorizationManager();
+        ipAuthManager = new IpAuthorizationManager(this);
+        operationLogger = new OperationLogger(this);
         
         // 注册日志监听器
         logListener.register(this);
@@ -28,10 +30,10 @@ public class WebManager extends JavaPlugin {
         
         // 启动HTTP服务器
         httpServer = new WebHttpServer(this);
-        httpServer.start(8976);
+        httpServer.start(9876);
         
-        getLogger().info("WebManager HTTP服务器已启动在端口 8976");
-        getLogger().info("管理界面地址: http://服务器IP:8976");
+        getLogger().info("WebManager HTTP服务器已启动在端口 9876");
+        getLogger().info("管理界面地址: http://服务器IP:9876");
         getLogger().info("使用 /webmanager add <ip> <days> 授权IP访问");
     }
 
@@ -117,5 +119,9 @@ public class WebManager extends JavaPlugin {
 
     public IpAuthorizationManager getIpAuthManager() {
         return ipAuthManager;
+    }
+
+    public OperationLogger getOperationLogger() {
+        return operationLogger;
     }
 }

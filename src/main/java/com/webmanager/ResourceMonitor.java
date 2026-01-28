@@ -94,46 +94,74 @@ public class ResourceMonitor {
 
     // 获取实体数量
     public int getEntityCount() {
-        final int[] entityCount = new int[1];
-        org.bukkit.Bukkit.getScheduler().callSyncMethod(org.bukkit.Bukkit.getPluginManager().getPlugin("WebManager"), () -> {
-            for (org.bukkit.World world : org.bukkit.Bukkit.getServer().getWorlds()) {
-                entityCount[0] += world.getEntities().size();
-            }
-            return null;
-        });
-        return entityCount[0];
+        try {
+            final java.util.concurrent.atomic.AtomicInteger entityCount = new java.util.concurrent.atomic.AtomicInteger(0);
+            org.bukkit.Bukkit.getScheduler().callSyncMethod(org.bukkit.Bukkit.getPluginManager().getPlugins()[0], new java.util.concurrent.Callable<Void>() {
+                @Override
+                public Void call() throws Exception {
+                    for (org.bukkit.World world : org.bukkit.Bukkit.getServer().getWorlds()) {
+                        entityCount.addAndGet(world.getEntities().size());
+                    }
+                    return null;
+                }
+            }).get();
+            return entityCount.get();
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     // 获取在线玩家数量
     public int getOnlinePlayerCount() {
-        final int[] count = new int[1];
-        org.bukkit.Bukkit.getScheduler().callSyncMethod(org.bukkit.Bukkit.getPluginManager().getPlugin("WebManager"), () -> {
-            count[0] = org.bukkit.Bukkit.getServer().getOnlinePlayers().size();
-            return null;
-        });
-        return count[0];
+        try {
+            final java.util.concurrent.atomic.AtomicInteger playerCount = new java.util.concurrent.atomic.AtomicInteger(0);
+            org.bukkit.Bukkit.getScheduler().callSyncMethod(org.bukkit.Bukkit.getPluginManager().getPlugins()[0], new java.util.concurrent.Callable<Void>() {
+                @Override
+                public Void call() throws Exception {
+                    playerCount.set(org.bukkit.Bukkit.getServer().getOnlinePlayers().size());
+                    return null;
+                }
+            }).get();
+            return playerCount.get();
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     // 获取最大玩家数量
     public int getMaxPlayerCount() {
-        final int[] max = new int[1];
-        org.bukkit.Bukkit.getScheduler().callSyncMethod(org.bukkit.Bukkit.getPluginManager().getPlugin("WebManager"), () -> {
-            max[0] = org.bukkit.Bukkit.getServer().getMaxPlayers();
-            return null;
-        });
-        return max[0];
+        try {
+            final java.util.concurrent.atomic.AtomicInteger maxPlayers = new java.util.concurrent.atomic.AtomicInteger(0);
+            org.bukkit.Bukkit.getScheduler().callSyncMethod(org.bukkit.Bukkit.getPluginManager().getPlugins()[0], new java.util.concurrent.Callable<Void>() {
+                @Override
+                public Void call() throws Exception {
+                    maxPlayers.set(org.bukkit.Bukkit.getServer().getMaxPlayers());
+                    return null;
+                }
+            }).get();
+            return maxPlayers.get();
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     // 获取加载的区块数量
     public int getLoadedChunksCount() {
-        final int[] chunksCount = new int[1];
-        org.bukkit.Bukkit.getScheduler().callSyncMethod(org.bukkit.Bukkit.getPluginManager().getPlugin("WebManager"), () -> {
-            for (org.bukkit.World world : org.bukkit.Bukkit.getServer().getWorlds()) {
-                chunksCount[0] += world.getLoadedChunks().length;
-            }
-            return null;
-        });
-        return chunksCount[0];
+        try {
+            final java.util.concurrent.atomic.AtomicInteger chunksCount = new java.util.concurrent.atomic.AtomicInteger(0);
+            org.bukkit.Bukkit.getScheduler().callSyncMethod(org.bukkit.Bukkit.getPluginManager().getPlugins()[0], new java.util.concurrent.Callable<Void>() {
+                @Override
+                public Void call() throws Exception {
+                    for (org.bukkit.World world : org.bukkit.Bukkit.getServer().getWorlds()) {
+                        chunksCount.addAndGet(world.getLoadedChunks().length);
+                    }
+                    return null;
+                }
+            }).get();
+            return chunksCount.get();
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     private long getProcessCpuTime() {
